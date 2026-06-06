@@ -1,0 +1,10 @@
+com/api/discovery/repository/ApiServiceRepository.class
+com/api/discovery/ApiDiscoveryApplication.class
+com/api/discovery/controller/ApiDiscoveryController.class
+com/api/discovery/service/ApiDiscoveryService.class
+com/api/discovery/model/Parameter.class
+com/api/discovery/service/ApiIngestionService.class
+com/api/discovery/config/WebConfig.class
+com/api/discovery/model/SchemaEntity.class
+com/api/discovery/model/APIService.class
+com/api/discovery/model/Endpoint.class

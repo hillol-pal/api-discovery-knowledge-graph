@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* === Modern Bluish Dark Theme === */
+:root {
+  --bg: #0a0f1a; /* Deep bluish dark */
+  --surface: #111827; /* Slate-900 with blue undertone */
+  --surface-2: #1e293b; /* Slate-800 */
+  --text: #e0e7ff; /* Light indigo tint */
+  --text-muted: #94a3b8;
+  --accent: #3b82f6; /* Strong blue */
+  --accent-hover: #2563eb;
+  --border: #334155;
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
+}
+
+/* Cards */
+.card {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  box-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.2),
+    0 4px 6px -4px rgb(0 0 0 / 0.2);
+}
+
+/* Inputs */
+.input {
+  width: 100%;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1rem 1.25rem;
+  font-size: 1rem;
+  color: var(--text);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: var(--accent);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background-color: var(--surface-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+  background-color: #334155;
+}
+
+/* Tabs */
+.tab {
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.tab-active {
+  background-color: #3b82f6;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
+}
+
+.tab-inactive {
+  color: #64748b;
+}
+
+.tab-inactive:hover {
+  background-color: #1e293b;
+  color: #e0e7ff;
+}
+
+/* File Upload Zone */
+.upload-zone {
+  border: 2px dashed #475569;
+  transition: all 0.2s ease;
+}
+
+.upload-zone:hover {
+  border-color: #3b82f6;
+  background-color: #1e293b;
+}
+
+/* Result Cards */
+.result-item {
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 1.25rem;
+}

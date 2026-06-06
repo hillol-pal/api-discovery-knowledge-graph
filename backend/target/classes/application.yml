@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-discovery-backend
+
+  neo4j:
+    uri: bolt://localhost:7687
+    username: neo4j
+    password: password
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+      embedding:
+        options:
+          model: text-embedding-3-small
+
+# CORS Configuration (for React frontend)
+cors:
+  allowed-origins: http://localhost:5173,http://localhost:3000
