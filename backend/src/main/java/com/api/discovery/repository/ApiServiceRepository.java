@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public interface ApiServiceRepository extends Neo4jRepository<APIService, Long> {
@@ -23,4 +24,6 @@ public interface ApiServiceRepository extends Neo4jRepository<APIService, Long> 
         LIMIT 300
     """)
     List<Map<String, Object>> getGraphData();
+
+    Optional<APIService> findByNameAndVersion(String name, String version);
 }

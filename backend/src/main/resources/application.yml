@@ -23,3 +23,9 @@ spring:
 # CORS Configuration (for React frontend)
 cors:
   allowed-origins: http://localhost:5173,http://localhost:3000
+
+vectorstore:
+  neo4j:
+    enabled: true
+    embedding-dimension: 1536
+    similarity-function: cosine

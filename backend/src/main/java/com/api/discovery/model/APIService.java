@@ -20,6 +20,10 @@ public class APIService {
     private String description;
     private String baseUrl;
 
+    private String embeddingText;
+    @Property
+    private float[] embedding;
+
     @Relationship(type = "HAS_ENDPOINT", direction = Relationship.Direction.OUTGOING)
     private List<Endpoint> endpoints = new ArrayList<>();
 }
