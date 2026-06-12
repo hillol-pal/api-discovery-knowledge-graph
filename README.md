@@ -2,6 +2,8 @@
 
 LLM-powered API discovery and catalog using knowledge base. Ingest OpenAPI/Swagger specs and explore them via natural language queries and an interactive visualization.
 
+> **Contributions welcome!** Please read the [Contributing Guide](CONTRIBUTING.md) for development setup, coding standards, workflow, and how to submit issues or pull requests.
+
 ## Goal
 
 Turn OpenAPI specifications into a rich, queryable knowledge graph. and graph traversals so users can discover APIs using plain English instead of reading docs.
@@ -164,6 +166,10 @@ Override `OPENAI_API_KEY` via environment variable (already wired with `${OPENAI
 
 ## Development
 
+For full contribution guidelines, development environment setup, coding standards, branch/PR workflow, and testing expectations, please see the **[Contributing Guide](CONTRIBUTING.md)**.
+
+Quick development commands:
+
 - Backend: `mvn spring-boot:run` (hot reload via DevTools can be added).
 - Frontend: `npm run dev` (Vite HMR enabled).
 - Lint frontend: `npm run lint`
@@ -186,12 +192,28 @@ Override `OPENAI_API_KEY` via environment variable (already wired with `${OPENAI
 │   ├── package.json
 │   ├── vite.config.ts
 │   └── src/App.tsx          # Main UI (tabs + cytoscape + axios calls)
+├── CONTRIBUTING.md
 └── README.md
 ```
 
 ## License / Status
 
 This is a proof-of-concept / internal research project demonstrating Spring AI + Neo4j for enterprise API discoverability.
+
+## Contributing
+
+We welcome contributions of all kinds (bug reports, features, tests, documentation, and improvements).
+
+**For any contribution**, please start by reading the **[Contributing Guide](CONTRIBUTING.md)**. It covers:
+
+- Local development setup and prerequisites
+- Coding standards and best practices (backend + frontend)
+- Git workflow, commit message conventions, and the pull request process
+- How to report bugs and suggest enhancements
+
+High-impact areas include adding test coverage, improving OpenAPI ingestion, enhancing the graph data model, and developer experience improvements.
+
+Thank you for helping improve this project!
 
 ---
 

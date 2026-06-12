@@ -1,0 +1,16 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Ask a Question
+    url: https://github.com/<owner>/<repo>/discussions/new?category=q-a
+    about: Please ask and answer questions in GitHub Discussions (if enabled for this repository).
+  - name: 🗣️ General Discussion
+    url: https://github.com/<owner>/<repo>/discussions
+    about: Start a discussion about the project, architecture, roadmap, or ideas.
+  - name: 🔒 Report a Security Vulnerability
+    url: https://github.com/<owner>/<repo>/security/advisories/new
+    about: Please report security vulnerabilities privately using GitHub Security Advisories instead of public issues.
+
+# Instructions for maintainers:
+# 1. Replace <owner>/<repo> with the actual GitHub repository path (e.g. your-org/api-discovery-kg).
+# 2. Enable Discussions in the repository settings if you want to direct users there.
+# 3. The "blank_issues_enabled: false" forces users to choose a template.
