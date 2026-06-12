@@ -1,7 +1,6 @@
 package com.api.discovery.config;
 
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;

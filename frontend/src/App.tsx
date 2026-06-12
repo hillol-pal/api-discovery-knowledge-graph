@@ -4,13 +4,10 @@ import cytoscape from "cytoscape";
 import type { Core } from "cytoscape";
 import {
   Upload,
-  Search,
   Network,
-  RefreshCw,
   ExternalLink,
   AlertCircle,
   CheckCircle,
-  Loader2,
 } from "lucide-react";
 
 const API_BASE = "http://localhost:8080";
@@ -47,6 +44,7 @@ function App() {
   // Query state
   const [queryText, setQueryText] = useState("");
   const [queryResults, setQueryResults] = useState<QueryResult[]>([]);
+  const [queryAnswer, setQueryAnswer] = useState<string | null>(null);
   const [queryLoading, setQueryLoading] = useState(false);
   const [queryError, setQueryError] = useState<string | null>(null);
 
@@ -55,7 +53,6 @@ function App() {
   const cyInstanceRef = useRef<Core | null>(null);
   const [graphLoading, setGraphLoading] = useState(false);
   const [graphError, setGraphError] = useState<string | null>(null);
-  const [graphLoaded, setGraphLoaded] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -79,7 +76,7 @@ function App() {
     if (selectedFile) formData.append("file", selectedFile);
 
     try {
-      const response = await axios.post(`${API_BASE}/ui/ingest`, formData, {
+      const response = await axios.post(`${API_BASE}/api/ingest`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setIngestMessage({
@@ -104,13 +101,28 @@ function App() {
     setQueryLoading(true);
     setQueryError(null);
     setQueryResults([]);
+    setQueryAnswer(null);
 
     try {
       const res = await axios.post(`${API_BASE}/api/discover/semantic`, {
         query: queryText.trim(),
       });
-      const data = res.data;
-      setQueryResults(Array.isArray(data) ? data : data ? [data] : []);
+      const data = res.data || {};
+      setQueryAnswer(
+        data && typeof data === "object" && "naturalLanguageAnswer" in data
+          ? (data.naturalLanguageAnswer as string) || null
+          : null,
+      );
+      const results = Array.isArray(data.results)
+        ? data.results
+        : data.results
+          ? [data.results]
+          : Array.isArray(data)
+            ? data
+            : data
+              ? [data]
+              : [];
+      setQueryResults(results);
     } catch (err: unknown) {
       setQueryError(axios.isAxiosError(err) ? err.message : "Query failed");
     } finally {
@@ -124,7 +136,7 @@ function App() {
     setGraphError(null);
 
     try {
-      const res = await axios.get<GraphDataItem[]>(`${API_BASE}/ui/graph/data`);
+      const res = await axios.get<GraphDataItem[]>(`${API_BASE}/api/graph/data`);
       const data = res.data;
 
       if (!data?.length) {
@@ -133,7 +145,7 @@ function App() {
       }
 
       const nodeMap = new Map();
-      const edges: any[] = [];
+      const edges: { source: string; target: string; label: string }[] = [];
 
       data.forEach((item) => {
         const sId = String(item.sourceId);
@@ -204,13 +216,16 @@ function App() {
 
       cyInstanceRef.current = cy;
       cy.ready(() => cy.fit(undefined, 40));
-      setGraphLoaded(true);
-    } catch (err) {
+    } catch {
       setGraphError("Failed to load graph");
     } finally {
       setGraphLoading(false);
     }
   };
+
+  // Note: Graph loads explicitly via the "Load / Refresh Graph" button to avoid
+  // effect-driven setState and to give the user control. The container renders
+  // immediately when the tab is selected.
 
   return (
     <div className="min-h-screen bg-[#0a0f1a] text-[#e0e7ff]">
@@ -257,10 +272,7 @@ function App() {
               Natural Language Query
             </button>
             <button
-              onClick={() => {
-                setActiveTab("graph");
-                if (!graphLoaded) setTimeout(loadGraph, 80);
-              }}
+              onClick={() => setActiveTab("graph")}
               className={`tab ${activeTab === "graph" ? "tab-active" : "tab-inactive"}`}
             >
               Property Graph
@@ -390,18 +402,64 @@ function App() {
             </div>
 
             <div className="card min-h-[420px]">
-              {queryError && <div className="text-red-400">{queryError}</div>}
+              {queryError && <div className="text-red-400 mb-4">{queryError}</div>}
+
+              {queryAnswer && (
+                <div className="mb-6 p-4 rounded-2xl bg-slate-800 border border-slate-700">
+                  <div className="text-xs uppercase tracking-widest text-slate-400 mb-1">Answer</div>
+                  <div className="text-sm leading-relaxed">{queryAnswer}</div>
+                </div>
+              )}
+
               {queryResults.length > 0 ? (
-                queryResults.map((r, i) => (
-                  <pre key={i} className="result-item text-sm mb-4">
-                    {JSON.stringify(r, null, 2)}
-                  </pre>
-                ))
-              ) : (
+                <div className="space-y-3">
+                  {queryResults.map((r, i) => {
+                    const result = r as {
+                      method?: string;
+                      path?: string;
+                      apiName?: string;
+                      apiVersion?: string;
+                      summary?: string;
+                      description?: string;
+                      parameters?: string[];
+                    };
+                    return (
+                      <div key={i} className="result-item">
+                        <div className="flex items-center gap-2 flex-wrap mb-2">
+                          {result.method && (
+                            <span className="inline-block text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300">
+                              {result.method}
+                            </span>
+                          )}
+                          {result.path && (
+                            <span className="font-mono text-sm text-emerald-400">{result.path}</span>
+                          )}
+                          {result.apiName && (
+                            <span className="text-xs text-slate-400 ml-auto">
+                              {result.apiName} {result.apiVersion ? `v${result.apiVersion}` : ""}
+                            </span>
+                          )}
+                        </div>
+                        {result.summary && (
+                          <div className="text-sm font-medium text-slate-200 mb-1">{result.summary}</div>
+                        )}
+                        {result.description && (
+                          <div className="text-xs text-slate-400 line-clamp-2">{result.description}</div>
+                        )}
+                        {result.parameters && Array.isArray(result.parameters) && result.parameters.length > 0 && (
+                          <div className="mt-2 text-[11px] text-slate-500">
+                            Params: {result.parameters.join(", ")}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : !queryAnswer && !queryLoading && !queryError ? (
                 <div className="text-center py-16 text-slate-500">
                   Your results will appear here
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         )}
@@ -416,10 +474,23 @@ function App() {
                   ApiService → Endpoint relationships
                 </p>
               </div>
-              <button onClick={loadGraph} className="btn btn-secondary">
-                Load / Refresh Graph
+              <button
+                onClick={loadGraph}
+                disabled={graphLoading}
+                className="btn btn-secondary"
+              >
+                {graphLoading ? "Loading..." : "Load / Refresh Graph"}
               </button>
             </div>
+
+            {graphLoading && (
+              <div className="text-sm text-slate-400 mb-3">Loading graph visualization...</div>
+            )}
+            {graphError && (
+              <div className="text-sm text-red-400 mb-3 p-3 bg-red-950/50 rounded-2xl border border-red-900">
+                {graphError}
+              </div>
+            )}
 
             <div
               ref={graphContainerRef}
