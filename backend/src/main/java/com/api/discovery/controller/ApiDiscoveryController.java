@@ -34,7 +34,10 @@ public class ApiDiscoveryController {
             @RequestParam(required = false) MultipartFile file) {
 
         IngestionResult result = ingestionService.ingest(apiName, url, file);
-        return ResponseEntity.ok(result.getMessage() +" : "+ result.getApiName() + " : " + result.getApiId());
+        if (!result.isSuccess()) {
+            return ResponseEntity.badRequest().body(result.getMessage());
+        }
+        return ResponseEntity.ok(result.getMessage() + " : " + result.getApiName() + " : " + result.getApiId());
     }
 
     @PostMapping("/discover/semantic")
