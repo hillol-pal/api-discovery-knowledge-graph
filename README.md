@@ -61,9 +61,7 @@ Domain model (simplified):
 - **Node.js** 18+ and npm
 - **Neo4j** running locally:
   - Default: `bolt://localhost:7687`
-  - Username: `neo4j`
-  - Password: `password`
-  - (You can start it via Neo4j Desktop, `neo4j start`, or Docker)
+  - (You can start it via Neo4j Desktop or Docker)
 - **OpenAI API key**
 
 ## Quick Start
